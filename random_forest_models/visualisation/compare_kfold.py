@@ -7,9 +7,11 @@ import numpy as np
 
 data = np.array(get_info())
 lables = ['KFold Shuffle', 'KFold', 'Stratified KFold', 'Stratified KFold Shuffle']
+plt.grid(True, linestyle='--')
 bars = plt.bar([i for i in range(len(data))], data[:, 2], tick_label=lables)
 plt.xticks(rotation=45)
-plt.grid(True, linestyle='--')
+
+plt.axis("equal")
 plt.subplots_adjust(bottom=0.3)
 plt.bar_label(bars, fmt='%.3f')
 plt.show()
