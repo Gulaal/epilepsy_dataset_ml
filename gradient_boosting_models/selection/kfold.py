@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.model_selection import KFold, StratifiedKFold, GroupKFold
+from sklearn.model_selection import KFold, StratifiedKFold, cross_validate
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 
@@ -20,7 +20,7 @@ def train_and_validate(folds: KFold):
 
         train_X, train_y, val_X, val_y = X.iloc[train_index], y.iloc[train_index], X.iloc[test_index], y.iloc[test_index]
 
-        model = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=1, random_state=1)
+        model = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, random_state=1, n_iter_no_change=10)
         model.fit(train_X, train_y)
 
         predictions = model.predict(val_X)
@@ -41,7 +41,6 @@ def train_and_validate(folds: KFold):
     print(f"Average accuracy: {avg_accuracy}\n")
 
     return [folds, max_accuracy, avg_accuracy]
-
 
 def stratified_kfold_selection():
     print("STRATIFIED")
