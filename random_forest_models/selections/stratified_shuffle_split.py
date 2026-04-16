@@ -3,7 +3,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 
-beed_file_path = 'BEED_Data.csv'
+beed_file_path = '../BEED_Data.csv'
 beed_data = pd.read_csv(beed_file_path)
 
 X = beed_data.iloc[:,:-1]
