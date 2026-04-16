@@ -6,8 +6,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from preprocess_data import get_dataloaders
+from draw_loss import draw_loss
 
-PATH = "./models/beed_mlp.pth"
+PATH = "./models/beed_mlp_1.pth"
 
 # class Net(nn.Module):
 
@@ -48,20 +49,18 @@ class Net(nn.Module):
         self.dropout = nn.Dropout(0.5)
 
     def forward(self, x):
-        x = F.relu(self.bn1(self.fc1(x)))
+        x = F.selu(self.bn1(self.fc1(x)))
         x = self.dropout(x)
-        x = F.relu(self.bn2(self.fc2(x)))
-        x = self.dropout(x)
-        x = F.relu(self.fc3(x))
+        x = F.selu(self.bn2(self.fc2(x)))
+        x = F.selu(self.bn3(self.fc3(x)))
         x = self.fc4(x)
         return x
 
-def train(epochs, dataloader, device):
-    net = Net()
+def train(epochs, dataloader, device, net=Net()):
     net.to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(net.parameters(), lr=0.1, momentum=0.9)
-
+    optimizer = optim.SGD(net.parameters(), lr=0.3, momentum=0.9)
+    average_losses = []
     for epoch in range(epochs):
         running_loss = 0.0
         epoch_sum_loss = 0.0
@@ -79,9 +78,13 @@ def train(epochs, dataloader, device):
             if i % 10 == 9:
                 print(f"[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 10:.3f}")
                 running_loss = 0.0
-        print(f"Average loss for epoch {epoch+1}: {epoch_sum_loss / amount}")
+        average_loss = epoch_sum_loss / amount
+        print(f"Average loss for epoch {epoch+1}: {average_loss}")
+        average_losses.append(average_loss)
+    
     torch.save(net.state_dict(), PATH)
     print("Finish Training")
+    draw_loss(epochs, average_losses)
 
 def test(dataloader, classes, device):
     net = Net()
@@ -110,7 +113,7 @@ def test(dataloader, classes, device):
     print(f"Average accuracy: {sum_acc / 4}")
 
 if __name__ == "__main__":
-    batch_size = 128
+    batch_size = 1024
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     train_dataloader, val_dataloader, test_dataloader = get_dataloaders(batch_size)
 
@@ -118,6 +121,9 @@ if __name__ == "__main__":
     train(epochs, train_dataloader, device)
 
     classes = (0, 1, 2, 3)
+    print(f"MLP on validation dataset")
+    test(val_dataloader, classes, device)
+    print(f"MLP on test dataset")
     test(test_dataloader, classes, device)
     
     
