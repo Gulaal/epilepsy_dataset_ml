@@ -77,8 +77,8 @@ def main(trainloader, device):
 def test(testloader, classes, device):
     
     net = Net()
-    net.to(device)
     net.load_state_dict(torch.load(PATH, weights_only=True))
+    net.to(device)
     
     correct_pred = {classname: 0 for classname in classes}
     total_pred = {classname: 0 for classname in classes}
