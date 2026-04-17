@@ -28,16 +28,15 @@ def preprocess_info(X, y):
     X_scaled = scaler.fit_transform(X)
 
     X_temp, X_test, y_temp, y_test = train_test_split(
-        X_scaled, y, test_size=0.2, random_state=1, stratify=y
+        X_scaled, y, test_size=0.2, random_state=3, stratify=y
     )
 
     X_train, X_val, y_train, y_val = train_test_split(
-        X_temp, y_temp, test_size=0.2, random_state=1, stratify=y_temp
+        X_temp, y_temp, test_size=0.2, random_state=3, stratify=y_temp
     )
 
     X_train_t = torch.tensor(X_train, dtype=torch.float32)
     y_train_t = torch.tensor(y_train.values, dtype=torch.long).squeeze()
-    print(X_train_t.t)
 
     X_val_t = torch.tensor(X_val, dtype=torch.float32)
     y_val_t = torch.tensor(y_val.values, dtype=torch.long).squeeze()

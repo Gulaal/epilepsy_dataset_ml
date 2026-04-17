@@ -1,9 +1,13 @@
 import matplotlib.pyplot as plt
 
-def draw_loss(epochs, avg_loss):
-    X = [i + 1 for i in range(epochs)]
-    plt.grid()
-    plt.xlabel("Epochs")
-    plt.ylabel("Average loss")
-    plt.plot(X, avg_loss)
+def draw_loss(train_losses, val_losses):
+    plt.figure(figsize=(10, 5))
+    plt.plot(train_losses, label='Train loss')
+    plt.plot(val_losses, label='Validation loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Training and Validation Loss')
+    plt.legend()
+    plt.grid(True)
+    plt.savefig('loss_curves.png')
     plt.show()
