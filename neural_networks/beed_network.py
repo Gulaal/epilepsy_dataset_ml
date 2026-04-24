@@ -7,12 +7,29 @@ from draw_loss import draw_loss
 
 PATH = "./models/beed_mlp_2.pth"
 
+# class Net(nn.Module):
+#     def __init__(self, input_size=16, num_classes=4):
+#         super().__init__()
+#         self.fc1 = nn.Linear(input_size, 64)
+#         self.bn1 = nn.BatchNorm1d(64)
+#         self.fc2 = nn.Linear(64, 32)
+#         self.bn2 = nn.BatchNorm1d(32)
+#         self.fc3 = nn.Linear(32, num_classes)
+#         self.sm = nn.Softmax(num_classes)
+#         self.dropout = nn.Dropout(0.3)
+
+#     def forward(self, x):
+#         x = F.gelu(self.bn1(self.fc1(x)))
+#         x = F.gelu(self.bn2(self.fc2(x)))
+#         x = self.fc3(x)
+#         return x
+
 class Net(nn.Module):
     def __init__(self, input_size=16, num_classes=4):
         super().__init__()
         self.fc1 = nn.Linear(input_size, 64)
         self.bn1 = nn.BatchNorm1d(64)
-        self.fc2 = nn.Linear(64, 32)
+        self.fc2 = nn.Linear(64, 32, bias=True)
         self.bn2 = nn.BatchNorm1d(32)
         self.fc3 = nn.Linear(32, num_classes)
         self.dropout = nn.Dropout(0.3)
@@ -26,12 +43,14 @@ class Net(nn.Module):
 def train(epochs, train_dataloader, val_dataloader, device, net=None):  
     if net is None:
         net = Net()
-    
     net.to(device)
+
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
+    
     average_train_losses = []
     val_losses = []
+    
     for epoch in range(epochs):
         net.train()
         running_loss = 0.0
@@ -100,11 +119,11 @@ def test(dataloader, classes, device, net=None):
     print(f"Average accuracy: {sum_acc / 4}")
 
 if __name__ == "__main__":
-    batch_size = 2256
+    batch_size = 64
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     train_dataloader, val_dataloader, test_dataloader = get_dataloaders(batch_size)
 
-    epochs = 800
+    epochs = 250
     train(epochs, train_dataloader, val_dataloader, device)
 
     classes = (0, 1, 2, 3)
