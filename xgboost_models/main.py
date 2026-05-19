@@ -11,7 +11,8 @@ y = beed_data.iloc[:,-1]
 
 skfold = StratifiedKFold(n_splits=8, shuffle=True, random_state=1)
 
-model = XGBClassifier(n_estimators = 500, learning_rate = 0.2, eval_metric='error', max_depth=8, random_state=1, subsample=0.8)
+"""Дописать цикл с перебором n_estimators"""
+model = XGBClassifier(n_estimators=500, learning_rate = 0.2, eval_metric='error', max_depth=8, random_state=1, subsample=0.8)
 
 scores = cross_validate(model, X, y, cv=skfold, n_jobs=6, scoring='accuracy')
 
