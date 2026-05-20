@@ -5,7 +5,7 @@ import torch.optim as optim
 from preprocess_data import get_dataloaders
 from draw_loss import draw_loss
 
-PATH = "./models/beed_mlp_2.pth"
+PATH = "./models/beed_mlp.pth"
 
 # class Net(nn.Module):
 #     def __init__(self, input_size=16, num_classes=4):
@@ -20,6 +20,7 @@ PATH = "./models/beed_mlp_2.pth"
 
 #     def forward(self, x):
 #         x = F.gelu(self.bn1(self.fc1(x)))
+#         x = self.dropout(x)
 #         x = F.gelu(self.bn2(self.fc2(x)))
 #         x = self.fc3(x)
 #         return x
